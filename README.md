@@ -189,4 +189,4 @@ In brief the tests check for:
 
 ## Improvements
 
-Further improvement could be made, such as to expose the app outside of the cluster by creating an ingress object in conjunction with setting up DNS to direct queries to the GKE cluster ingress controller. Furthermore setting up tls certificates for our ingress. We can also automate the build, deploy, test process end to end by creating a CICD pipeline. Add github actions to improve CI process such as running `terraform fmt` and `terraform validate` on push.  
+Further improvement could be made, such as to expose the app outside of the cluster by creating an ingress object in conjunction with setting up DNS to direct queries to the GKE cluster ingress controller. Furthermore setting up tls certificates for our ingress. We can also automate the build, deploy, test process end to end by creating a CICD pipeline. Also we could add build triggers so that we can trigger builds whenever a commit is made. Add github actions to improve CI process such as running `terraform fmt` and `terraform validate` on push.  
