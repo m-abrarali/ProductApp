@@ -19,7 +19,7 @@ Before we can get started, you will need to create a service account in gcloud w
 
 ### Remote state storage set-up
 
-Within our `cluster` folder we have a `state-file-storage` folder. This contains code for a one time gcs bucket creation, to be used to store our GKE cluster's state file. If you already have a bucket that you can use for this, please ignore this folder, and jumpt to the [create cluster step](#create-cluster).
+Within our `cluster` folder we have a `state-file-storage` folder. This contains code for a one time gcs bucket creation, to be used to store our GKE cluster's state file. If you already have a bucket that you can use for this, please ignore this folder, and jump to the [create cluster step](#create-cluster).
 
 cd into the `cluster/state-file-storage` and set default values for the below in the `variables.tf` file:
 ```
@@ -42,8 +42,6 @@ terraform init
 terraform apply
 ```
 
-If you already have a bucket in which to store the terraform state file, please move onto to next step below.
-
 ## Create Cluster
 
 Firstly we need to set-up a new vpc and networks in gcloud. To do this follow the below steps, from the root of this directory:
@@ -55,6 +53,7 @@ Firstly we need to set-up a new vpc and networks in gcloud. To do this follow th
 # define GCP project name
 variable "gcp_project" {
   type        = string
+  default     = "<your-gcp-project>"
   description = "GCP project name"
 }
 
@@ -80,13 +79,13 @@ provider "google" {
 
 6. terraform apply
 ```
-This will create 5 resources in total at the end of which you will have a regional GKE cluster up and running.
+This will create 5 resources in total, at the end of which you will have a regional GKE cluster up and running.
 
 ## Build and deploy app
 
 Next we use cloud builder to build our app image, push to our private gcr repo and deploy our app on our newly created GKE cluster. *Please ensure your gcloud cli has been configured and cloudbuild service account has appropriate permissions to deploy applications and its resources to the GKE cluster.*
 
-First set the env var `$GCP_PROJECT` which contains your gcp project id. And update the image by setting gcp project id in `chart/product-app/values.yaml` as below:
+First set the env var `$GCP_PROJECT` which contains your gcp project id. Also update gcp project id in the image value in `chart/product-app/values.yaml` as below:
 ```
 image:
   repository: gcr.io/<your_gcp_project>/product-app
@@ -102,22 +101,24 @@ Now that we have everything set-up and deployed, we can test our app has been co
 
 ### Manual testing
 
-We can quickly test by hand the app accepts responses from https://reqres.in/api/products/, and displays complete list of products. Firstly login to the GKE cluster:
+We can quickly test by hand the app accepts responses from https://reqres.in/api/products/, and displays complete list of products. 
+
+Firstly login to the GKE cluster:
 ```
 gcloud container clusters get-credentials gke-cluster --region europe-west2
 ```
 Next check our app is running:
 ```
-$ kubeclt get po
+$ kubectl get po
 
 NAME                                     READY   STATUS    RESTARTS   AGE
 product-app-deployment-db55db748-59dnf   1/1     Running   0          4h5m
 ```
 Then we can port-forward traffic from the pod to our local machine as so:
 ```
-$ kubeclt port-forward pod/product-app-deployment-db55db748-59dnf 5000:5000
+$ kubectl port-forward pod/product-app-deployment-db55db748-59dnf 5000:5000
 ```
-Then curl the endpoint, or load up in your browser to check we get the product list:
+Then curl the endpoint, or load up in your browser to check we get the full list of products:
 ```
 curl -s http://localhost:5000/product-list/
 
@@ -171,7 +172,7 @@ curl -s http://localhost:5000/product-list/
 
 We can also automatically test the above plus the autoscaling of our app. The tests folder contains some BDD tests for our application using [behave](https://behave.readthedocs.io/en/stable/) which gives us a framework through which we can write our tests in python.
 
-Once authenticated to the cluster and have installed the behave cli, run the below command from the root of the directory:
+Once authenticated to the cluster and have installed the `behave` cli, run the below command from the root of the directory:
 ```
 $ behave tests/behave/features --tags=@productapp
 ```
@@ -185,7 +186,7 @@ In brief the tests check for:
 * HPA object exist
 * Connect to product app and confirm we get the full product list
 * Deploy 15 pods all making requests to the app to generate load
-* Confirm product app has scaled to 3 replicas in response to increase in requests
+* Confirm product app has scaled to 3 replicas in response to increase in the number of requests
 
 ## Improvements
 
