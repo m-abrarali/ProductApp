@@ -1,0 +1,44 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+appNamespace: product-app
+replicaCount: 1
+revisionHistoryLimit: 1
+image:
+  repository: gcr.io/fair-geography-309610/product-app
+  tag: 0.0.1
+  pullPolicy: Always
+  resources:
+    requests:
+      cpu: 200m
+      memory: 300Mi
+  readinessProbe:
+    httpGet:
+      path: /product-list
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 5000
+    initialDelaySeconds: 40
+    periodSeconds: 10
+service:
+  name: Node
+  type: NodePort
+  servicePort: 5000
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    cpu:
+      targetAverageUtilization: 50 # usually set to 70 however set to 50 for ease of testing hpa
+    memory:
+      targetAverageUtilization: 50 # usually set to 70 however set to 50 for ease of testing hpa
+
+# This is the max unavailable setting for the pod disruption budget
+# The default value of 1 will make sure that kubernetes won't allow more than 1
+# of your pods to be unavailable during maintenance
+maxUnavailable: 0

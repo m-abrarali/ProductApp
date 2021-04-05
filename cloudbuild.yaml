@@ -1,0 +1,30 @@
+
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t',
+           'gcr.io/$GCP_PROJECT/product-app:0.0.1', './app/.']
+
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$GCP_PROJECT/product-app:0.0.1']
+
+  # Authenticate with cluster
+  - name: gcr.io/cloud-builders/kubectl
+    id: Configure kubectl
+    args:
+      - cluster-info
+    env:
+      - CLOUDSDK_COMPUTE_REGION=europe-west2
+      - CLOUDSDK_CONTAINER_CLUSTER=gke-cluster
+      - KUBECONFIG=/workspace/.kube/config
+
+  # Install helm chart
+  - name: 'gcr.io/$GCP_PROJECT/helm'
+    args: ['install', '-f', './chart/product-app/values.yaml', 'productapp', './chart/product-app']
+    env:
+    - CLOUDSDK_COMPUTE_REGION=europe-west2
+    - CLOUDSDK_CONTAINER_CLUSTER=gke-cluster
+
+images:
+  - 'gcr.io/$GCP_PROJECT/product-app:0.0.1'

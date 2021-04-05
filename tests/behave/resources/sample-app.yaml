@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-app
+  namespace: product-app
+spec:
+  restartPolicy: Never
+  containers:
+  - name: sample-app
+    image: gcr.io/cos-cloud/toolbox
+    args: ["curl", "-s", "http://product-app-service.product-app.svc.cluster.local:5000/product-list/"]
