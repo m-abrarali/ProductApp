@@ -19,9 +19,9 @@ Before we can get started, you will need to create a service account in gcloud w
 
 ### Remote state storage set-up
 
-Within our `cluster` folder we have a `state-file-storage` folder. This contains code for a one time gcs bucket creation, to be used to store our GKE cluster's state file. If you already have a bucket that you can use for this, please ignore this folder.
+Within our `cluster` folder we have a `state-file-storage` folder. This contains code for a one time gcs bucket creation, to be used to store our GKE cluster's state file. If you already have a bucket that you can use for this, please ignore this folder, and jumpt to the [create cluster step](#create-cluster).
 
-cd into the `cluster/state-file-storage` and set default values for the below inn the `variables.tf` file:
+cd into the `cluster/state-file-storage` and set default values for the below in the `variables.tf` file:
 ```
 define GCP project name
 variable "gcp_project" {
