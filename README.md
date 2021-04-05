@@ -86,7 +86,7 @@ This will create 5 resources in total at the end of which you will have a region
 
 Next we use cloud builder to build our app image, push to our private gcr repo and deploy our app on our newly created GKE cluster. *Please ensure your gcloud cli has been configured and cloudbuild service account has appropriate permissions to deploy applications and its resources to the GKE cluster.*
 
-First set the env var `$GCP_PROJECT` which contains your GCP project id. And update the image by setting gcp project id in `chart/product-app/values.yaml` as below:
+First set the env var `$GCP_PROJECT` which contains your gcp project id. And update the image by setting gcp project id in `chart/product-app/values.yaml` as below:
 ```
 image:
   repository: gcr.io/<your_gcp_project>/product-app
