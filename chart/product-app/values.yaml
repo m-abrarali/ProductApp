@@ -4,7 +4,7 @@ appNamespace: product-app
 replicaCount: 1
 revisionHistoryLimit: 1
 image:
-  repository: gcr.io/fair-geography-309610/product-app
+  repository: gcr.io/<your_gcp_project/product-app
   tag: 0.0.1
   pullPolicy: Always
   resources:
