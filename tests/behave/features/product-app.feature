@@ -1,6 +1,6 @@
 @productapp
 Feature: Test product app deployment and verify autoscaling
-  As an Developer
+  As a Developer
   I want to deploy my application on gke with hpa
   So that I can obtain the product list from  https://reqres.in/api/products/ when I query my app
 
